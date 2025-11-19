@@ -130,4 +130,5 @@ class UCYGenerator:
 
 
 if __name__ == "__main__":
-    generator = UCYGenerator(num_years=3000, output_file="3000_years_bedrock_data.txt").generate()
+    generator = UCYGenerator(num_years=3000, output_file="3000_years_bedrock_data.txt")
+    generator.generate()
