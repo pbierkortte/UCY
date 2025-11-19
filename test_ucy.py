@@ -2,10 +2,22 @@
 
 import pytest, random
 from datetime import datetime
-from ucy import DAY_NS, ts, is_short_year, to_parts, to_ucy, to_utc
+from ucy import DAY_NS, ts, is_short_year, to_parts, to_ucy, to_utc, get_equinox_by_year
 from test_cases import TEST_CASES, YEAR_LENGTH_CASES
 
 random.seed(45)
+
+
+def test_round_trip():
+    """Round-trip diff should be within 30 seconds"""
+    tt = 2222222.222222222
+    ucy = to_ucy(tt)
+    utc_str = to_utc(ucy)
+    dt_obj = datetime.fromisoformat(utc_str.replace("Z", "+00:00"))
+    out_tt = ts.from_datetime(dt_obj).tt
+    diff_seconds = abs((tt - out_tt) * 86400.0)
+    error_msg = f"Roundtrip difference is {diff_seconds} seconds"
+    assert diff_seconds < 30.0, error_msg
 
 
 @pytest.mark.parametrize("test_name", TEST_CASES.keys())
@@ -55,6 +67,16 @@ def test_ucy_conversions(test_name):
     assert nano == exp_nano, error_msg
 
 
+def test_valid_parts():
+    """Test parts remain within valid bounds"""
+    for i in range(4096):
+        current_tt = TEST_CASES["Datum Exact"][0].tt + i + random.random()
+        ucy_year, week, day, nano = to_parts(current_tt)
+        is_within_bounds = 0 <= week <= 45 and 0 <= day <= 7 and 0 <= nano < DAY_NS
+        error_msg = f"UCY year {ucy_year}: week={week} day={day} nano={nano} out of bounds at TT={current_tt:.9f}"
+        assert is_within_bounds, error_msg
+
+
 @pytest.mark.parametrize("year_num,expected_days", YEAR_LENGTH_CASES)
 def test_year_lengths(year_num, expected_days):
     """Test that years are correctly identified as 360 or 368 days"""
@@ -67,16 +89,6 @@ def test_year_lengths(year_num, expected_days):
 
     error_msg = f"Year {year_num} should be {expected_days} days (short={expected_short}) but is_short_year returned {is_short}"
     assert is_short == expected_short, error_msg
-
-
-def test_valid_parts():
-    """Test parts remain within valid bounds"""
-    for i in range(4096):
-        current_tt = TEST_CASES["Datum Exact"][0].tt + i + random.random()
-        ucy_year, week, day, nano = to_parts(current_tt)
-        is_within_bounds = 0 <= week <= 45 and 0 <= day <= 7 and 0 <= nano < DAY_NS
-        error_msg = f"UCY year {ucy_year}: week={week} day={day} nano={nano} out of bounds at TT={current_tt:.9f}"
-        assert is_within_bounds, error_msg
 
 
 @pytest.mark.slow
@@ -94,6 +106,17 @@ def test_consecutive_years():
 
     error_msg = f"Found {len(consecutive_pairs)} consecutive short year pairs: {consecutive_pairs}"
     assert len(consecutive_pairs) == 0, error_msg
+
+
+@pytest.mark.slow
+def test_equinox_offset_alignment():
+    """Verify equinox offset remains within +/- 4 days"""
+    for ucy_year in range(-250, 250):
+        is_short, year_start_tt, year_size = is_short_year(ucy_year)
+        equinox_tt = get_equinox_by_year(ucy_year)
+        offset = year_start_tt - equinox_tt
+        error_msg = f"UCY year {ucy_year}: offset={offset:.4f} days out of bounds"
+        assert abs(offset) < 4, error_msg
 
 
 @pytest.mark.slow
@@ -121,15 +144,3 @@ def test_generational_stability():
         else:
             error_msg = f"Found LLS run of only {lls_count} years"
             pytest.fail(error_msg)
-
-
-def test_round_trip():
-    """Round-trip diff should be within 30 seconds"""
-    tt = 2222222.222222222
-    ucy = to_ucy(tt)
-    utc_str = to_utc(ucy)
-    dt_obj = datetime.fromisoformat(utc_str.replace("Z", "+00:00"))
-    out_tt = ts.from_datetime(dt_obj).tt
-    diff_seconds = abs((tt - out_tt) * 86400.0)
-    error_msg = f"Roundtrip difference is {diff_seconds} seconds"
-    assert diff_seconds < 30.0, error_msg
