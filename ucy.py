@@ -46,7 +46,8 @@ def is_short_year(ucy_year: int) -> Tuple[bool, float, int]:
     phase = (next_equinox - DATUM_TT) % WEEK_DAYS
     is_short = threshold <= phase < 4.0
     year_size = 360 if is_short else 368
-    year_start_tt = next_equinox - phase - 360
+    offset = 360 if phase > threshold else 368
+    year_start_tt = next_equinox - phase - offset
     return is_short, year_start_tt, year_size
 
 
