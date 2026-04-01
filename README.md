@@ -113,7 +113,7 @@ UCY dates use octal notation: `year_week_day.fraction`
 ├── ucy.md                    # Main documentation
 ├── MEDITATION.md             # Philosophical exploration
 ├── requirements.txt          # Dependencies
-└── LICENSE                   # GPL v3
+└── LICENSE                   # See for details
 ```
 
 ## Running Tests
