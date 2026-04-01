@@ -2,7 +2,6 @@
 
 import math
 from functools import lru_cache
-from typing import Optional, Tuple
 from skyfield import almanac
 from skyfield.api import Loader
 
@@ -33,7 +32,7 @@ DATUM_TT = get_equinox_by_year(0)
 
 
 @lru_cache(maxsize=4096)
-def is_short_year(ucy_year: int) -> Tuple[bool, float, int]:
+def is_short_year(ucy_year: int) -> tuple[bool, float, int]:
     """Determine if UCY year is short (360d) or long (368d)"""
     if FAST_MODE and FAST_MIN_YEAR <= ucy_year <= FAST_MAX_YEAR:
         next_equinox = DATUM_TT + ((ucy_year + 1) * TROPICAL_YEAR_DAYS)
@@ -51,7 +50,7 @@ def is_short_year(ucy_year: int) -> Tuple[bool, float, int]:
     return is_short, year_start_tt, year_size
 
 
-def to_parts(jd_tt: Optional[float] = None) -> Tuple[int, int, int, int]:
+def to_parts(jd_tt: float | None = None) -> tuple[int, int, int, int]:
     """Convert TT (Julian days) to UCY parts"""
     jd_tt = jd_tt or ts.now().tt
     total_elapsed_days = jd_tt - DATUM_TT
