@@ -23,8 +23,8 @@ seasons = almanac.seasons(eph)
 def get_equinox_by_year(ucy_year: int) -> float:
     """Return spring equinox TT (Julian days) for given UCY year."""
     gregorian_year = ucy_year - 43
-    march_start, april_start = ts.utc(gregorian_year, 3, 1), ts.utc(gregorian_year, 4, 1)
-    times, codes = almanac.find_discrete(march_start, april_start, seasons, EPSILON)
+    march, april = ts.utc(gregorian_year, 3, 1), ts.utc(gregorian_year, 4, 1)
+    times, codes = almanac.find_discrete(march, april, seasons, EPSILON)
     return min(time.tt for time, code in zip(times, codes) if code == 0)
 
 
