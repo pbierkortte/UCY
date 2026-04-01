@@ -115,7 +115,7 @@ A UCY date compressed into 4 octal characters: `YWWD`
 
 Example: `4025_02_1` → `5021`
 
-Four characters. Year cycles through eight, week fills the middle, day holds the end. Not stored. Encoded.
+Four characters. Year cycles through eight, week fills the middle, day holds the end. Scribble it on a notebook. Stamp it on a batch.
 
 Compact. Lossy. Useful.
 
