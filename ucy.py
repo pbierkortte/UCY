@@ -55,21 +55,17 @@ def to_parts(jd_tt: float | None = None) -> tuple[int, int, int, int]:
     jd_tt = jd_tt or ts.now().tt
     total_elapsed_days = jd_tt - DATUM_TT
     year = int(total_elapsed_days / TROPICAL_YEAR_DAYS)
-    is_short, year_start_tt, _ = is_short_year(year)
-    if jd_tt < year_start_tt:
+    _, curr_start, _ = is_short_year(year)
+    _, next_start, _ = is_short_year(year + 1)
+    if jd_tt < curr_start:
         year -= 1
-        is_short, year_start_tt, _ = is_short_year(year)
-    elif jd_tt >= is_short_year(year + 1)[1]:
+    elif jd_tt >= next_start:
         year += 1
-        is_short, year_start_tt, _ = is_short_year(year)
+    is_short, year_start_tt, _ = is_short_year(year)
     days_into_year = jd_tt - year_start_tt
-    week = math.floor(days_into_year / 8)
-    if is_short and week < 45:
-        week += 1
-    if not is_short and year >= 0:
-        if 0.0 < (360.0 - days_into_year) < (2.0 / 86400.0):
-            week = 45
-    week = min(week, 45)
+    week = min(math.floor(days_into_year / 8) + is_short, 45)
+    if not is_short and 0.0 < (360.0 - days_into_year) < (2.0 / 86400.0):
+        week = 45
     day = math.floor(total_elapsed_days % 8)
     nano = math.floor((total_elapsed_days % 1) * DAY_NS)
     return int(year), int(week), int(day), int(nano)
