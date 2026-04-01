@@ -36,12 +36,11 @@ def is_short_year(ucy_year: int) -> tuple[bool, float, int]:
     """Determine if UCY year is short (360d) or long (368d)"""
     if FAST_MODE and FAST_MIN_YEAR <= ucy_year <= FAST_MAX_YEAR:
         next_equinox = DATUM_TT + ((ucy_year + 1) * TROPICAL_YEAR_DAYS)
-        threshold = 4.0 - (368 - TROPICAL_YEAR_DAYS)
+        year_length = TROPICAL_YEAR_DAYS
     else:
-        year_equinox = get_equinox_by_year(ucy_year)
         next_equinox = get_equinox_by_year(ucy_year + 1)
-        actual_year = next_equinox - year_equinox
-        threshold = 4.0 - (368 - actual_year)
+        year_length = next_equinox - get_equinox_by_year(ucy_year)
+    threshold = 4.0 - (368 - year_length)
     phase = (next_equinox - DATUM_TT) % WEEK_DAYS
     is_short = threshold <= phase < 4.0
     year_size = 360 if is_short else 368
