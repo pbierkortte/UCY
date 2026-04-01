@@ -1,6 +1,6 @@
 # UCY
 
-import math, re
+import math
 from functools import lru_cache
 from typing import Optional, Tuple
 from skyfield import almanac
@@ -85,7 +85,7 @@ def to_ucy(tt: float) -> str:
 
 def to_utc(ucy: str) -> str:
     """Convert a UCY octal string to a UTC ISO 8601 string"""
-    year, week, day, frac = re.split(r"[_.]", ucy)
+    year, week, day, frac = ucy.replace(".", "_").split("_")
     year_abs, week, day, frac = map(lambda chunk: int(chunk, 8), [year, week, day, frac])
     year_int = -year_abs if year.startswith("0") else year_abs
     is_short, year_start_tt, _ = is_short_year(year_int)
