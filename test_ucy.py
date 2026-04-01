@@ -2,7 +2,7 @@
 
 import pytest, random
 from datetime import datetime
-from ucy import DAY_NS, ts, is_short_year, to_parts, to_ucy, to_utc, get_equinox_by_year
+from ucy import DAY_NS, ts, is_short_year, to_parts, to_ucy, to_tiny, to_utc, get_equinox_by_year
 from test_cases import TEST_CASES, YEAR_LENGTH_CASES
 
 random.seed(45)
@@ -65,6 +65,20 @@ def test_ucy_conversions(test_name):
 
     error_msg = f"Nano mismatch for {test_name}: got {nano}, expected {exp_nano}"
     assert nano == exp_nano, error_msg
+
+
+@pytest.mark.parametrize("test_name", TEST_CASES.keys())
+def test_tiny_conversions(test_name):
+    """Test tiny octal strings fall within valid range 0000-7557"""
+    jd, exp_year, exp_week, exp_day, _ = TEST_CASES[test_name]
+
+    tiny_string = to_tiny(jd.tt)
+    tiny_value = int(tiny_string, 8)
+
+    print(f"\n  tiny_string: {tiny_string}, desc: {test_name}")
+
+    error_msg = f"Tiny mismatch for {test_name}: got {tiny_string}, expected 0000-7557 (Octal)"
+    assert 0 <= tiny_value <= 3951, error_msg
 
 
 def test_valid_parts():

@@ -83,6 +83,12 @@ def to_ucy(tt: float) -> str:
     return f"{year:o}_{week:02o}_{day:o}.{frac:04o}".replace("-", "0")
 
 
+def to_tiny(tt: float) -> str:
+    """Convert TT (Julian days) to tiny string format."""
+    year, week, day, _ = to_parts(tt)
+    return f"{year % 8:o}{week:02o}{day:o}"
+
+
 def to_utc(ucy: str) -> str:
     """Convert a UCY octal string to a UTC ISO 8601 string"""
     year, week, day, frac = ucy.replace(".", "_").split("_")
