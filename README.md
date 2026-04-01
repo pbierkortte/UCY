@@ -65,7 +65,7 @@ Note: On first run, Skyfield will download the NASA JPL DE431t ephemeris (~3.5 G
 ## Usage
 
 ```python
-from ucy import to_ucy, to_parts, to_utc
+from ucy import to_ucy, to_parts, to_mini, to_utc
 import skyfield.api as sf
 
 # Get current UCY date
@@ -73,6 +73,10 @@ ts = sf.load.timescale()
 now = ts.now()
 ucy_date = to_ucy(now.tt)
 print(ucy_date)  # e.g., "4024_31_6.1751"
+
+# Mini shorthand (4-char octal: YWWD)
+mini = to_mini(now.tt)
+print(mini)  # e.g., "4316"
 
 # Get UCY components
 year, week, day, nano = to_parts(now.tt)
@@ -87,11 +91,17 @@ print(utc_iso)  # e.g., 2025-10-11T14:55:34Z
 
 UCY dates use octal notation: `year_week_day.fraction`
 
-**Example**: `4024_31_6.1751`
+**Full format**: `4024_31_6.1751`
 - Year: 4024 (2068 in decimal)
 - Week: 31 (25 in decimal)  
 - Day: 6
 - Fraction: .1751 (position within day)
+
+**Mini shorthand**: `4316` (4 octal characters: `YWWD`)
+- Y: last octal digit of year
+- WW: week number (octal)
+- D: day of week
+- Range: `0000`–`7557`
 
 ## Project Structure
 
@@ -134,6 +144,7 @@ Tests validate:
 | Notation | Base-8 (octal) throughout |
 | Datum | Spring equinox, 44 BCE |
 | Algorithm | Measurement-based threshold |
+| Mini shorthand | 4-char octal (`YWWD`, range `0000`–`7557`) |
 | Pattern stability | 100% of runs ≥27 years long
 
 ## Documentation

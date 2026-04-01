@@ -105,6 +105,20 @@ Example: `4024_31_6.1751`
 
 Hierarchy: Days (0-7) → Weeks (0-45 or 1-45) → Years. No months.
 
+### Mini Shorthand
+
+A UCY date compressed into 4 octal characters: `YWWD`
+
+- **Y** (1 digit): last octal digit of the year (`year % 8`)
+- **WW** (2 digits): week number in octal (00-55)
+- **D** (1 digit): day of week (0-7)
+
+Example: `4025_02_1` → `5021`
+
+Four characters. Year cycles through eight, week fills the middle, day holds the end. Not stored. Encoded.
+
+Compact. Lossy. Useful.
+
 ### Negative Years
 
 Dates before the datum (44 BCE) produce negative year numbers. The minus sign is replaced with "0" in the string format.
