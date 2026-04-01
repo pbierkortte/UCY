@@ -92,7 +92,7 @@ def to_mini(tt: float) -> str:
 def to_utc(ucy: str) -> str:
     """Convert a UCY octal string to a UTC ISO 8601 string"""
     year, week, day, frac = ucy.replace(".", "_").split("_")
-    year_abs, week, day, frac = map(lambda chunk: int(chunk, 8), [year, week, day, frac])
+    year_abs, week, day, frac = (int(token, 8) for token in (year, week, day, frac))
     year_int = -year_abs if year.startswith("0") else year_abs
     is_short, year_start_tt, _ = is_short_year(year_int)
     week_index = week - 1 if is_short and week > 0 else week
