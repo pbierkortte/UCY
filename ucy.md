@@ -117,6 +117,16 @@ Example: `4025_02_1` → `5021`
 
 Four characters. Year cycles through eight, week fills the middle, day holds the end. Scribble it on a notebook. Stamp it on a batch.
 
+Benefits:
+- Compact: 4 octal digits, no delimiters, no padding
+- Dense: Week plus day is day-of-year, day-of-week falls out
+- Natural: Two pairs spoken, one number sorted
+- Contextual: Year inferred from when it's written
+- Sufficient: 8 years exceeds typical retention spans
+- Unambiguous: Unique within those 8 years
+- Portable: Writes on stamps, prints on labels, rolls off the tongue
+- Memorable: Holds in memory, fits in speech
+
 Compact. Lossy. Useful.
 
 ### Negative Years
