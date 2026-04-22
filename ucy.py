@@ -70,8 +70,8 @@ def to_parts(jd_tt: float | None = None) -> tuple[int, int, int, int]:
     return int(year), int(week), int(day), int(nano)
 
 
-def to_ucy(tt: float) -> str:
-    """Convert TT (Julian days) to UCY octal string format."""
+def to_full(tt: float) -> str:
+    """Convert TT (Julian days) to full octal string format."""
     year, week, day, nano = to_parts(tt)
     frac = (nano * 8**4) // DAY_NS
     return f"{year:o}_{week:02o}_{day:o}.{frac:04o}".replace("-", "0")
@@ -97,4 +97,4 @@ def to_utc(ucy: str) -> str:
 
 
 if __name__ == "__main__":
-    print("Now:", to_ucy(ts.now().tt), "UCY")
+    print("Now:", to_full(ts.now().tt), "UCY")

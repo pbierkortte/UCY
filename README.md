@@ -65,13 +65,13 @@ Note: On first run, Skyfield will download the NASA JPL DE431t ephemeris (~3.5 G
 ## Usage
 
 ```python
-from ucy import to_ucy, to_parts, to_mini, to_utc
+from ucy import to_full, to_parts, to_mini, to_utc
 import skyfield.api as sf
 
 # Get current UCY date
 ts = sf.load.timescale()
 now = ts.now()
-ucy_date = to_ucy(now.tt)
+ucy_date = to_full(now.tt)
 print(ucy_date)  # e.g., "4024_31_6.1751"
 
 # Mini shorthand (4-char octal: YWWD)

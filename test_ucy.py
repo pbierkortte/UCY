@@ -2,7 +2,7 @@
 
 import pytest, random
 from datetime import datetime
-from ucy import DAY_NS, ts, is_short_year, to_parts, to_ucy, to_mini, to_utc, get_equinox_by_year
+from ucy import DAY_NS, ts, is_short_year, to_parts, to_full, to_mini, to_utc, get_equinox_by_year
 from test_cases import TEST_CASES, YEAR_LENGTH_CASES
 
 random.seed(45)
@@ -11,7 +11,7 @@ random.seed(45)
 def test_round_trip():
     """Round-trip diff should be within 30 seconds"""
     tt = 2222222.222222222
-    ucy = to_ucy(tt)
+    ucy = to_full(tt)
     utc_str = to_utc(ucy)
     dt_obj = datetime.fromisoformat(utc_str.replace("Z", "+00:00"))
     out_tt = ts.from_datetime(dt_obj).tt
@@ -26,7 +26,7 @@ def test_ucy_conversions(test_name):
     jd, exp_year, exp_week, exp_day, exp_nano = TEST_CASES[test_name]
 
     year, week, day, nano = to_parts(jd.tt)
-    ucy_string = to_ucy(jd.tt)
+    ucy_string = to_full(jd.tt)
     iso_string = jd.utc_iso(places=9)
     unix_seconds = round((jd.tt - 2440587.5) * 86400)
 
