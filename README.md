@@ -78,7 +78,7 @@ print(ucy_date)  # e.g., "4024_31_6.1751"
 mini = to_mini(now.tt)
 print(mini)  # e.g., "4316"
 
-# Hex shorthand (9-char hex: yyyfffffff)
+# Hex shorthand (9-char hex: yyyWWDfff)
 hex_date = to_hex(now.tt)
 print(hex_date)  # e.g., "8142379f5"
 
