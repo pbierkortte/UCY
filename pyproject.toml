@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ucy"
+version = "0.1.0"
+description = "UCY: An alternative calendar system using 8-day weeks and octal notation."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "skyfield",
+]
+
+[project.urls]
+Homepage = "https://github.com/pbierkortte/UCY"
+
+[tool.setuptools]
+py-modules = ["ucy"]
