@@ -1,11 +1,12 @@
 # UCY
 
+import os
 import math
 from functools import lru_cache
 from skyfield import almanac
 from skyfield.api import Loader
 
-FAST_MODE = False  # Use a fixed constant for the mean year
+FAST_MODE = os.environ.get("UCY_FAST", "1") != "0"  # constant mean year
 FAST_MIN_YEAR, FAST_MAX_YEAR = 1843, 2243  # 1800 to 2200 AD
 TROPICAL_YEAR_DAYS = 365.24224853515625  # octal 0o555.17402
 DAY_NS = 86_400_000_000_000
@@ -13,9 +14,10 @@ WEEK_DAYS = 8.0
 EPSILON = 1e-9
 
 loader = Loader("~/.skyfield-data")
-eph = loader("de431t.bsp")
 ts = loader.timescale()
-seasons = almanac.seasons(eph)
+if not FAST_MODE:
+    eph = loader("de431t.bsp")  # ~3.5 GB download on first run
+    seasons = almanac.seasons(eph)
 
 
 @lru_cache()
@@ -28,7 +30,7 @@ def get_equinox_by_year(ucy_year: int) -> float:
 
 
 # Datum: Spring equinox after Caesar's death (March 21, 44 BCE ~9:04 AM UTC)
-DATUM_TT = get_equinox_by_year(0)
+DATUM_TT = get_equinox_by_year(0) if not FAST_MODE else 1705433.878337198
 
 
 @lru_cache(maxsize=4096)
