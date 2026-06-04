@@ -83,6 +83,13 @@ def to_mini(tt: float) -> str:
     return f"{year % 8:o}{week:02o}{day:o}"
 
 
+def to_hex(tt: float) -> str:
+    """Convert TT (Julian days) to hex string format yyyffffff."""
+    year, week, day, nano = to_parts(tt)
+    frac = (nano * 16**3) // DAY_NS
+    return f"{year:03x}{week:02x}{day:01x}{frac:03x}"
+
+
 def to_utc(ucy: str) -> str:
     """Convert a UCY octal string to a UTC ISO 8601 string"""
     year, week, day, frac = ucy.replace(".", "_").split("_")

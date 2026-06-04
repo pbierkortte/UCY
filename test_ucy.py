@@ -2,7 +2,7 @@
 
 import pytest, random
 from datetime import datetime
-from ucy import DAY_NS, ts, is_short_year, to_parts, to_full, to_mini, to_utc, get_equinox_by_year
+from ucy import DAY_NS, ts, is_short_year, to_parts, to_full, to_mini, to_hex, to_utc, get_equinox_by_year
 from test_cases import TEST_CASES, YEAR_LENGTH_CASES
 
 random.seed(45)
@@ -23,7 +23,7 @@ def test_round_trip():
 @pytest.mark.parametrize("test_name", TEST_CASES.keys())
 def test_ucy_conversions(test_name):
     """Test UCY calendar conversions"""
-    jd, exp_year, exp_week, exp_day, exp_nano = TEST_CASES[test_name]
+    jd, exp_year, exp_week, exp_day, exp_nano, _ = TEST_CASES[test_name]
 
     year, week, day, nano = to_parts(jd.tt)
     ucy_string = to_full(jd.tt)
@@ -70,7 +70,7 @@ def test_ucy_conversions(test_name):
 @pytest.mark.parametrize("test_name", TEST_CASES.keys())
 def test_tiny_conversions(test_name):
     """Test tiny octal strings fall within valid range 0000-7557"""
-    jd, exp_year, exp_week, exp_day, _ = TEST_CASES[test_name]
+    jd, exp_year, exp_week, exp_day, _, __ = TEST_CASES[test_name]
 
     tiny_string = to_mini(jd.tt)
     tiny_value = int(tiny_string, 8)
@@ -79,6 +79,19 @@ def test_tiny_conversions(test_name):
 
     error_msg = f"Tiny mismatch for {test_name}: got {tiny_string}, expected 0000-7557 (Octal)"
     assert 0 <= tiny_value <= 3951, error_msg
+
+
+@pytest.mark.parametrize("test_name", TEST_CASES.keys())
+def test_hex_conversions(test_name):
+    """Test hex string output matches expected value"""
+    jd, _, _, _, _, exp_hex = TEST_CASES[test_name]
+
+    hex_string = to_hex(jd.tt)
+
+    print(f"\n  hex_string: {hex_string}, desc: {test_name}")
+
+    error_msg = f"Hex mismatch for {test_name}: got {hex_string}, expected {exp_hex}"
+    assert hex_string == exp_hex, error_msg
 
 
 def test_valid_parts():
