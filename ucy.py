@@ -107,4 +107,4 @@ def to_utc(ucy: str) -> str:
 
 
 if __name__ == "__main__":
-    print("Now:", to_full(ts.now().tt), "UCY")
+    print("Now:", to_full(), "UCY")
