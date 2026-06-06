@@ -78,9 +78,9 @@ print(ucy_date)  # e.g., "4024_31_6.1751"
 mini = to_mini(now.tt)
 print(mini)  # e.g., "4316"
 
-# Hex shorthand (9-char hex, octal-aligned: yyyy_wkd_fffff)
+# Hex shorthand (12-char hex, octal-aligned: yyyy_wkdf_ffffffff)
 hex_date = to_hex(now.tt)
-print(hex_date)  # e.g., "8148fcfac"
+print(hex_date)  # e.g., "8148fcface2a"
 
 # Get UCY components
 year, week, day, nano = to_parts(now.tt)
@@ -107,11 +107,11 @@ UCY dates use octal notation: `year_week_day.fraction`
 - D: day of week
 - Range: `0000`–`7557`
 
-**Hex shorthand**: `8148fcfac` (9 hex characters = 12 octal digits, octal-aligned: `yyyy_wkd_fffff`)
-- yyyy: year (4 octal digits, 12 bits)
+**Hex shorthand**: `8148fcface2a` (12 hex characters = 16 octal digits, octal-aligned: `yyyy_wkdf_ffffffff`)
+- yyy: year (4 octal digits, 12 bits)
 - wk: week number (2 octal digits, 6 bits, 0-45)
 - d: day of week (1 octal digit, 3 bits, 0-7)
-- fffff: intra-day fraction (5 octal digits, 15 bits, ~2.64 second precision)
+- fffffffff: intra-day fraction (9 octal digits, 27 bits, <1 ms precision)
 - Pre-datum dates zero the sign
 
 ## Project Structure
@@ -156,7 +156,7 @@ Tests validate:
 | Datum | Spring equinox, 44 BCE |
 | Algorithm | Measurement-based threshold |
 | Mini shorthand | 4-char octal (`YWWD`, range `0000`–`7557`) |
-| Hex shorthand | 9-char hex (octal-aligned `yyyy_wkd_fffff`, ~2.64 second precision) |
+| Hex shorthand | 12-char hex (octal-aligned `yyyy_wkdf_ffffffff`, ~0.64 ms precision) |
 | Pattern stability | 100% of runs ≥27 years long
 
 ## Documentation
