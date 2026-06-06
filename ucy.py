@@ -72,20 +72,20 @@ def to_parts(jd_tt: float | None = None) -> tuple[int, int, int, int]:
     return int(year), int(week), int(day), int(nano)
 
 
-def to_full(tt: float) -> str:
+def to_full(tt: float | None = None) -> str:
     """Convert TT (Julian days) to full octal string format."""
     year, week, day, nano = to_parts(tt)
     frac = (nano * 8**4) // DAY_NS
     return f"{year:o}_{week:02o}_{day:o}.{frac:04o}".replace("-", "0")
 
 
-def to_mini(tt: float) -> str:
+def to_mini(tt: float | None = None) -> str:
     """Convert TT (Julian days) to mini string format."""
     year, week, day, _ = to_parts(tt)
     return f"{year % 8:o}{week:02o}{day:o}"
 
 
-def to_hex(tt: float) -> str:
+def to_hex(tt: float | None = None) -> str:
     """Convert TT (Julian days) to hexadecimal string format."""
     year, week, day, nano = to_parts(tt)
     frac = (nano * 8**9) // DAY_NS
