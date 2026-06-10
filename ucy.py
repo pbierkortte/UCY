@@ -96,13 +96,13 @@ def to_hex(tt: float | None = None) -> str:
 def to_utc(ucy: str) -> str:
     """Convert a UCY octal string to a UTC ISO 8601 string"""
     year, week, day, frac = ucy.replace(".", "_").split("_")
-    year_abs, week, day, frac = (int(token, 8) for token in (year, week, day, frac))
+    year_abs, week, day = (int(token, 8) for token in (year, week, day))
     year_int = -year_abs if year.startswith("0") else year_abs
     is_short, year_start_tt, _ = is_short_year(year_int)
     week_index = week - 1 if is_short and week > 0 else week
     base_days = (year_start_tt - DATUM_TT) + (week_index * 8)
     day_offset = (day - (base_days % 8)) % 8
-    total_days = base_days + day_offset + (frac / 8**4)
+    total_days = base_days + day_offset + (int(frac, 8) / 8**len(frac))
     return ts.tt_jd(DATUM_TT + total_days).utc_iso()
 
 
